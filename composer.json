@@ -38,6 +38,11 @@
             "": "extend/"
         }
     },
+    "autoload-dev": {
+        "psr-0": {
+            "": "tests/"
+        }
+    },
     "config": {
         "preferred-install": "dist"
     },
