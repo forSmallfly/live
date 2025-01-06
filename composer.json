@@ -23,7 +23,10 @@
         "php": ">=8.0.0",
         "topthink/framework": "^8.0",
         "topthink/think-orm": "^3.0|^4.0",
-        "topthink/think-filesystem": "^2.0"
+        "topthink/think-filesystem": "^2.0",
+        "xingwenge/canal_php": "^1.0",
+        "ext-rdkafka": "*",
+        "elasticsearch/elasticsearch": "^8.16"
     },
     "require-dev": {
         "symfony/var-dumper": ">=4.2",
@@ -44,7 +47,10 @@
         }
     },
     "config": {
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     },
     "scripts": {
         "post-autoload-dump": [

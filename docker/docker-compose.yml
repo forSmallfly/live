@@ -1,0 +1,57 @@
+version: '3.8'
+services:
+  zookeeper:
+    image: zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - "2181:2181"  # 映射 Zookeeper 端口
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: kafka
+    ports:
+      - "9092:9092"  # 映射 Kafka 端口
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181  # 连接 Zookeeper
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    ports:
+      - "3306:3306" # 映射 MySQL 端口到宿主机
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test
+      MYSQL_USER: canal
+      MYSQL_PASSWORD: canal
+    volumes:
+      - ./conf/mysql/my.cnf:/etc/my.cnf # 挂载 MySQL 配置文件
+      - D:\data:/var/lib/mysql # 数据持久化存储
+  canal-server:
+    image: canal/canal-server:latest
+    container_name: canal-server
+    ports:
+      - "11110:11110" # 映射 Canal Server 端口到宿主机
+      - "11111:11111" # 映射 Canal Server 端口到宿主机
+      - "11112:11112" # 映射 Canal Server 端口到宿主机
+      - "9100:9100" # 映射 Canal Server 端口到宿主机
+    volumes:
+      - ./conf/canal/example/instance.properties:/home/admin/canal-server/conf/example/instance.properties # 挂载 Canal 配置文件目录
+    depends_on:
+      - mysql # 等待 MySQL 服务启动
+  canal-admin:
+    image: canal/canal-admin:latest
+    container_name: canal-admin
+    ports:
+      - "8089:8089" # 映射 CANAL-ADMIN 端口到宿主机
+    environment:
+      - canal.adminUser=admin
+      - canal.adminPasswd=admin
+    depends_on:
+      - canal-server # 等待 CANAL-SERVER 服务启动
