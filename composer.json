@@ -26,7 +26,9 @@
         "topthink/think-filesystem": "^2.0",
         "xingwenge/canal_php": "^1.0",
         "ext-rdkafka": "*",
-        "elasticsearch/elasticsearch": "^8.16"
+        "elasticsearch/elasticsearch": "^8.16",
+        "topthink/think-migration": "^3.1",
+        "topthink/think-annotation": "^2.0"
     },
     "require-dev": {
         "symfony/var-dumper": ">=4.2",

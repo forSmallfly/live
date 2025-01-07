@@ -1,0 +1,99 @@
+<?php
+declare (strict_types = 1);
+
+namespace {%namespace%};
+
+use app\BaseController;
+use think\annotation\route\Route;
+use think\db\exception\DbException;
+use think\Response;
+
+class {%className%} extends BaseController
+{
+    /**
+     * 获取资源列表
+     *
+     * @return Response
+     * @throws DbException
+     */
+    #[Route("GET", "{%lowerClass%}/list")]
+    public function list(): Response
+    {
+        $params = $this->request->getParams();
+        $field  = '';
+        $where  = [];
+        // 设置分页信息
+        [$total, $list] = \app\model\{%className%}::getInstance()->setPageAndListRows($params)->tableList($field, $where);
+        return $this->success([
+            'total' => $total,
+            'list'  => $list
+        ]);
+    }
+
+    /**
+     * 获取资源信息
+     *
+     * @return Response
+     */
+    #[Route("GET", "{%lowerClass%}/info")]
+    public function info(): Response
+    {
+        $params = $this->request->getParams();
+        $field  = '';
+        $where  = [
+            ['id', '=', $params['id']]
+        ];
+
+        $info = \app\model\{%className%}::getInstance()->info($field, $where);
+        return $this->success([
+            'info' => $info
+        ]);
+    }
+
+    /**
+     * 新建资源
+     *
+     * @return Response
+     */
+    #[Route("POST", "{%lowerClass%}/add")]
+    public function add(): Response
+    {
+        $params = $this->request->getParams();
+        $result = \app\model\{%className%}::getInstance()->add($params, true);
+        return $result ? $this->success(['id' => $result]) : $this->fail();
+    }
+
+    /**
+     * 更新资源
+     *
+     * @return Response
+     */
+    #[Route("PUT", "{%lowerClass%}/update")]
+    public function update(): Response
+    {
+        $params = $this->request->getParams();
+        $where  = [
+            ['id', '=', $params['id']]
+        ];
+
+        unset($params['id']);
+        $result = \app\model\{%className%}::getInstance()->change($where, $params);
+        return $result ? $this->success() : $this->fail();
+    }
+
+    /**
+     * 删除资源
+     *
+     * @return Response
+     */
+    #[Route("DELETE", "{%lowerClass%}/delete")]
+    public function delete(): Response
+    {
+        $params = $this->request->getParams();
+        $where  = [
+            ['id', '=', $params['id']]
+        ];
+        $result = \app\model\{%className%}::getInstance()->remove($where);
+        return $result ? $this->success() : $this->fail();
+    }
+}

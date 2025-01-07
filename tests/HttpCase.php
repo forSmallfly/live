@@ -1,15 +1,33 @@
 <?php
 
+use app\utils\RequestTool;
 use PHPUnit\Framework\TestCase;
 use think\App;
 use think\Response;
 
 class HttpCase extends TestCase
 {
+    use RequestTool;
+
     /**
      * @var App
      */
     public App $app;
+
+    /**
+     * @var string
+     */
+    protected string $token = '';
+
+    /**
+     * 登录参数
+     *
+     * @var array|string[]
+     */
+    protected array $loginParams = [
+        'account'  => 'admin',
+        'password' => 'admin'
+    ];
 
     /**
      * @return void
@@ -17,6 +35,29 @@ class HttpCase extends TestCase
     protected function setUp(): void
     {
         $this->app = new App();
+        if (empty($this->token)) {
+            $this->login($this->loginParams);
+        }
+    }
+
+    /**
+     * @depends testRegister
+     *
+     * @param array $params
+     * @return void
+     */
+    public function login(array $params): void
+    {
+        /*** @see Common::login() */
+        $response = $this->post('/common/login', [
+            'account'  => $params['account'],
+            'password' => $params['password']
+        ]);
+
+        $data = $response->getData();
+
+        $this->token        = $data['data']['token'];
+        $this->app->request = null;
     }
 
     /**

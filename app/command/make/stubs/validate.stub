@@ -1,0 +1,49 @@
+<?php
+declare (strict_types = 1);
+
+namespace {%namespace%};
+
+use app\BaseValidate;
+
+class {%className%} extends BaseValidate
+{
+    /**
+     * 定义验证规则
+     * 格式：'字段名' =>  ['规则1','规则2'...]
+     *
+     * @var array
+     */
+    protected $rule = [
+        {%rule%}
+    ];
+
+    /**
+     * 定义错误信息
+     * 格式：'字段名.规则名' =>  '错误信息'
+     *
+     * @var array
+     */
+    protected $message = [
+        {%message%}
+    ];
+
+    /**
+     * 定义验证场景
+     * 格式：'场景名' =>  ['字段名1','字段名2'...]
+     *
+     * @var array[]
+     */
+    protected $scene = [
+        {%scene%}
+    ];
+
+    /**
+     * list 验证场景定义
+     *
+     * @return {%className%}
+     */
+    public function sceneList(): {%className%}
+    {
+        return $this->remove('id', true){%sceneList%};
+    }
+}
