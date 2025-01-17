@@ -80,10 +80,15 @@ class HttpCase extends TestCase
             }
         }
 
+        $server = ['REQUEST_URI' => $url];
+        foreach ($header as $name => $value) {
+            $server['http_' . $name] = $value;
+        }
+
         // 每一次都创建新的request对象，防止同一次单元测试中多个请求相互影响
         $request = $this->app->make('request', [], true)
             ->setMethod('get')
-            ->withServer(['REQUEST_URI' => $url])
+            ->withServer($server)
             ->withGet($data)
             ->withHeader($header);
 
@@ -103,10 +108,15 @@ class HttpCase extends TestCase
      */
     protected function post(string $url, array $data = [], array $header = []): Response
     {
+        $server = ['REQUEST_URI' => $url];
+        foreach ($header as $name => $value) {
+            $server['http_' . $name] = $value;
+        }
+
         // 每一次都创建新的request对象，防止同一次单元测试中多个请求相互影响
         $request = $this->app->make('request', [], true)
             ->setMethod('post')
-            ->withServer(['REQUEST_URI' => $url])
+            ->withServer($server)
             ->withPost($data)
             ->withHeader($header);
 
@@ -126,11 +136,16 @@ class HttpCase extends TestCase
      */
     protected function put(string $url, array $data = [], array $header = []): Response
     {
+        $server = ['REQUEST_URI' => $url];
+        foreach ($header as $name => $value) {
+            $server['http_' . $name] = $value;
+        }
+
         // 每一次都创建新的request对象，防止同一次单元测试中多个请求相互影响
         $request = $this->app->make('request', [], true)
             ->withHeader($header)
             ->setMethod('put')
-            ->withServer(['REQUEST_URI' => $url])
+            ->withServer($server)
             ->withInput(json_encode($data));
 
         $response = $this->app->http->run($request);
@@ -149,11 +164,16 @@ class HttpCase extends TestCase
      */
     protected function delete(string $url, array $data = [], array $header = []): Response
     {
+        $server = ['REQUEST_URI' => $url];
+        foreach ($header as $name => $value) {
+            $server['http_' . $name] = $value;
+        }
+
         // 每一次都创建新的request对象，防止同一次单元测试中多个请求相互影响
         $request = $this->app->make('request', [], true)
             ->withHeader($header)
             ->setMethod('delete')
-            ->withServer(['REQUEST_URI' => $url])
+            ->withServer($server)
             ->withInput(json_encode($data));
 
         $response = $this->app->http->run($request);
