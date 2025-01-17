@@ -10,10 +10,14 @@ return [
     // API免登录名单
     'exempt_login'     => [
         'Common/login',
-        'Common/register'
+        'Common/register',
+        'Oauth/authorize',
+        'Oauth/token',
+        'Store/linkStore'
     ],
     // API白名单
     'white_list'       => [
-        'Common/logout'
+        'Common/logout',
+        'Oauth/authorize'
     ]
 ];
